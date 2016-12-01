@@ -1,5 +1,7 @@
 
-/* 2016.12.01 */
+/* 2016.12.01 
+   2016.12.02
+*/
 
 class Vehicle {
   
@@ -98,6 +100,65 @@ class Vehicle {
     
   }
 
+  void followMulPoints(MulPointsPath path) {
+    
+    PVector predict = velocity.get() ;
+    predict.normalize();
+    predict.mult(25);
+    PVector predictLoc = PVector.add( location , predict ) ;
+
+    PVector normal = null ;
+    PVector target = null ;
+    float record = 1000000.0 ;
+    
+    for(int i = 0 ; i < path.points.size()-1 ; i++) {
+      
+      PVector ps = path.points.get(i) ;
+      PVector pe = path.points.get(i+1) ;
+      PVector normalPo = getNormalPoint( predictLoc , ps , pe ) ;
+      
+      // It is necessary . 
+      // If... , using a path endpoint as the normal point .
+      if( normalPo.x < ps.x || normalPo.x > pe.x ) {
+        normalPo = pe.get() ;
+      }
+      
+      PVector dir = PVector.sub( pe , ps ) ;
+      dir.normalize() ;
+      dir.mult(10) ;
+      
+      float dist = PVector.dist( predictLoc , normalPo ) ;
+      // forward from normalPo , for the target      
+      PVector targetPo = PVector.add( normalPo , dir ) ;
+
+      if( dist < record ) {
+        record = dist ;
+        normal = normalPo ;
+        target = targetPo ;        
+      }
+        
+    }
+    
+    if( record > path.radius ) {
+      seek(target) ;
+    }
+  }
+  
+  PVector getNormalPoint(PVector predictLocation , PVector pathStart , 
+                         PVector pathEnd ) {
+                           
+    PVector ls = PVector.sub( predictLocation , pathStart ) ;
+    PVector es = PVector.sub( pathEnd         , pathStart ) ;
+    
+    float theta = PVector.angleBetween( ls , es ) ;
+    
+    es.normalize() ;
+    es.mult( ls.mag() * cos(theta) ) ;
+    
+    PVector normalPoint = PVector.add( pathStart , es ) ;
+    
+    return normalPoint ;
+  }
   
   void borders(Path path) {
     
@@ -106,6 +167,14 @@ class Vehicle {
       location.y = path.start.y + (location.y - path.end.y) ;
     }
     
+  }
+  
+  void bordersForMul(MulPointsPath mpath) {
+    if( location.x > mpath.getEnd().x + r ) {
+      location.x = mpath.getStart().x - r ;
+      location.y = mpath.getStart().y + (location.y - mpath.getEnd().y) ;
+    }
+
   }
   
 }
