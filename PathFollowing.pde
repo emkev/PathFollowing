@@ -31,5 +31,15 @@ void draw() {
 }
 
 void mousePressed() {
-  
+
+  PVector mouse = new PVector( mouseX , mouseY ) ;
+  PVector dir = PVector.sub( mouse , car1.location ) ;
+  dir.normalize();
+  dir.mult( 3.0 ) ;
+
+  PVector steer = PVector.sub( dir , car1.velocity ) ;
+  //steer.limit( 0.5 ) ;
+    
+  car1.applyForce( steer ) ;
+
 }
