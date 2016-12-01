@@ -16,10 +16,12 @@ class Path {
   
   void display() {
     
+    // thick line of path
     strokeWeight( radius * 2 ) ;
     stroke(0 , 100) ;
     line(start.x , start.y , end.x , end.y) ;
     
+    // thin line of path
     strokeWeight(1) ;
     stroke(0);
     line(start.x , start.y , end.x , end.y) ;
