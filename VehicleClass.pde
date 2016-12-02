@@ -123,24 +123,27 @@ class Vehicle {
         normalPo = pe.get() ;
       }
       
-      PVector dir = PVector.sub( pe , ps ) ;
-      dir.normalize() ;
-      dir.mult(10) ;
-      
       float dist = PVector.dist( predictLoc , normalPo ) ;
-      // forward from normalPo , for the target      
-      PVector targetPo = PVector.add( normalPo , dir ) ;
 
       if( dist < record ) {
+        
         record = dist ;
         normal = normalPo ;
-        target = targetPo ;        
-      }
         
-    }
+        PVector dir = PVector.sub( pe , ps ) ;
+        dir.normalize() ;
+        dir.mult(10) ;
+        // forward from normalPo , for the target
+        PVector targetPo = PVector.add( normalPo , dir ) ;
+
+        target = targetPo ;     
+        
+      } /*  if( dist < record )  */
+        
+    } /*  for(int i = 0 ; i < path.points.size()-1 ; i++)  */
     
     if( record > path.radius ) {
-      seek(target) ;
+      seek( target ) ;
     }
   }
   
