@@ -62,7 +62,7 @@ void draw() {
 void newPath() {
 
   /* 2017.03.21 , remove previous path-points */
-  mpath.removePoints() ;
+  mpath.removeAllPoints() ;
 
   mpath.addPoint( new PVector(-20 , height/2) ) ;
   mpath.addPoint( new PVector(random(0,width/2) , random(0,height)) ) ;
