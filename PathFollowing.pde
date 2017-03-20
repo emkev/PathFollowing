@@ -1,6 +1,8 @@
 
-/* 2016.12.01 
+/* base on Daniel Shiffman 's code 
+   2016.12.01 
    2016.12.02
+   2017.03.20 , add debug-mode
 */
 
 Path path ;
@@ -9,7 +11,11 @@ MulPointsPath mpath ;
 Vehicle car1 ;
 Vehicle car2 ;
 
+/* 2017.03.20 , add debug-mode */
+boolean debug ;
+
 void setup() {
+
   size(640 , 360);
   
   path = new Path() ;
@@ -17,8 +23,11 @@ void setup() {
 
   newPath() ;
   
-  car1 = new Vehicle( new PVector(0 , height/2) ) ;
-  car2 = new Vehicle( new PVector(0 , height/3) ) ;  
+  car1 = new Vehicle( new PVector(50 , height/2) ) ;
+  car2 = new Vehicle( new PVector(75 , height/3) ) ;  
+  
+  debug = false ;
+  
 }
 
 void draw() {
@@ -39,8 +48,10 @@ void draw() {
   mpath.display() ;
   car1.followMulPoints(mpath);
   car2.followMulPoints(mpath);
-  car1.run();
-  car2.run();
+  /* 2017.03.20 , add debug-mode */
+  car1.run( debug );
+  car2.run( debug );
+  
   car1.bordersForMul(mpath);
   car2.bordersForMul(mpath);
   // multiple points path , end
@@ -66,4 +77,11 @@ void mousePressed() {
     
   car1.applyForce( steer ) ;
   
+}
+
+// 2017.03.20 add debug-mode
+void keyPressed() {
+  if( key == 'd' || key == 'D' ) {
+    debug = !debug ;
+  }
 }
