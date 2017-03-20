@@ -3,6 +3,8 @@
    2016.12.01 
    2016.12.02
    2017.03.20 , add debug-mode
+   2017.03.21 , add keyPressed to new paths , 
+                and removing previous path points 
 */
 
 Path path ;
@@ -58,6 +60,10 @@ void draw() {
 }
 
 void newPath() {
+
+  /* 2017.03.21 , remove previous path-points */
+  mpath.removePoints() ;
+
   mpath.addPoint( new PVector(-20 , height/2) ) ;
   mpath.addPoint( new PVector(random(0,width/2) , random(0,height)) ) ;
   mpath.addPoint( new PVector(random(width/2,width) , random(0,height)) ) ;
@@ -79,9 +85,15 @@ void mousePressed() {
   
 }
 
-// 2017.03.20 , add debug-mode
+/* 2017.03.20 , add debug-mode
+   2017.03.21 , add keyPressed to new paths
+*/
 void keyPressed() {
   if( key == 'd' || key == 'D' ) {
     debug = !debug ;
   }
+  else if( key == 'p' || key == 'P' ) {
+    newPath() ;
+  }
+  
 }
