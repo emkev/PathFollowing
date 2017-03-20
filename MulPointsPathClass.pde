@@ -27,7 +27,7 @@ class MulPointsPath {
   }
   
   /* 2017.03.21 , removing previous path-points */
-  void removePoints() {
+  void removeAllPoints() {
     for( int i = points.size()-1 ; i >= 0 ; i-- ) {
       points.remove(i);
     }
