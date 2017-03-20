@@ -1,5 +1,7 @@
 
-/* 2016.12.01 pm 23:52 */
+/* 2016.12.01 pm 23:52 
+   2017.03.21 , removing previous path-points
+*/
 
 class MulPointsPath {
   
@@ -22,6 +24,13 @@ class MulPointsPath {
   
   PVector getEnd() {
     return points.get(points.size()-1) ;
+  }
+  
+  /* 2017.03.21 , removing previous path-points */
+  void removePoints() {
+    for( int i = points.size()-1 ; i >= 0 ; i-- ) {
+      points.remove(i);
+    }
   }
   
   void display() {
