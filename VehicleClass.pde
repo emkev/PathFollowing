@@ -1,6 +1,7 @@
 
 /* 2016.12.01 
    2016.12.02
+   2017.03.20 , add debug-mode
 */
 
 class Vehicle {
@@ -13,21 +14,35 @@ class Vehicle {
   float maxSpeed ; 
   float maxForce ; 
 
+  /* 2017.03.20 , add debug-mode */
+  PVector predictLocShow ;
+  PVector normalPoShow ;
+  PVector targetShow ;
+
+  float predictLen ;
+
   Vehicle(PVector l)
   {
     r = 3.0 ; 
     maxSpeed = 2.0 ; 
     maxForce = 0.1 ; 
 
-    location = l.get() ; 
-    velocity = new PVector(maxSpeed , 0) ; 
+    location     = l.get() ; 
+    velocity     = new PVector(maxSpeed , 0) ; 
     acceleration = new PVector(0 , 0) ; 
-
+    
+    /* 2017.03.20 , add debug-mode */
+    predictLocShow = new PVector( 0 , 0 ) ;
+    normalPoShow   = new PVector( 0 , 0 ) ;
+    targetShow     = new PVector( 0 , 0 ) ;
+    
+    predictLen = 25.0 ;
   }
 
-  void run() {
+  /* 2017.03.20 , add debug-mode */
+  void run( boolean debugMode ) {
     update() ;
-    display() ;
+    display( debugMode ) ;
   }
   
   void update()
@@ -43,27 +58,49 @@ class Vehicle {
     acceleration.add(force) ; 
   }
 
-  void display()
+  void display( boolean debugMode )
   {
     float theta = velocity.heading2D() + PI / 2 ; 
+    
     fill(175) ; 
     stroke(0) ; 
+    
+    
     pushMatrix() ; 
+    
     translate(location.x , location.y) ; 
     rotate(theta) ; 
+    
     beginShape() ; 
     vertex(0 , -r * 2) ; 
     vertex(-r , r * 2) ; 
     vertex(r , r * 2) ; 
+    
+    /* 2017.03.20 , add debug-mode */
+    if( debugMode ) {
+      ellipse( 0 , (-1)*predictLen , 4 , 4 ) ;
+      line( 0 , (-2)*r , 0 , (-1)*predictLen ) ;
+    }
+    
     endShape(CLOSE) ; 
+    
     popMatrix() ; 
+    
+    /* 2017.03.20 , add debug-mode */
+    if( debugMode) {
+      ellipse( predictLocShow.x , predictLocShow.y , 4 , 4 ) ;
+      ellipse( normalPoShow.x   , normalPoShow.y   , 4 , 4 ) ;
+      ellipse( targetShow.x     , targetShow.y     , 4 , 4 ) ; 
+      line( predictLocShow.x , predictLocShow.y , normalPoShow.x , normalPoShow.y ) ;
+    }
+    
   }
 
   void follow(Path path) {
     
     PVector predict = velocity.get() ;
     predict.normalize();
-    predict.mult(25);
+    predict.mult(predictLen);
     PVector predictLoc = PVector.add( location , predict ) ;
     
     PVector a = PVector.sub( predictLoc , path.start ) ;
@@ -105,7 +142,7 @@ class Vehicle {
     
     PVector predict = velocity.get() ;
     predict.normalize();
-    predict.mult(25);
+    predict.mult(predictLen);
     PVector predictLoc = PVector.add( location , predict ) ;
 
     PVector normal = null ;
@@ -142,6 +179,11 @@ class Vehicle {
       } /*  if( dist < record )  */
         
     } /*  for(int i = 0 ; i < path.points.size()-1 ; i++)  */
+    
+    /* 2017.03.20 mode */
+    predictLocShow = predictLoc.get() ; 
+    normalPoShow   = normal.get() ;
+    targetShow     = target.get() ;
     
     if( record > path.radius ) {
       seek( target ) ;
