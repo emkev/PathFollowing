@@ -79,7 +79,7 @@ void mousePressed() {
   
 }
 
-// 2017.03.20 add debug-mode
+// 2017.03.20 , add debug-mode
 void keyPressed() {
   if( key == 'd' || key == 'D' ) {
     debug = !debug ;
